@@ -5,17 +5,20 @@ from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem
 
+from UI.main import Ui_MainWindow
+from UI.addEditCoffeeForm import Ui_MainWindow
+
 
 class DBSample(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)
+        uic.loadUi('../UI/main.ui', self)
         self.select_data()
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("../data/coffee.sqlite")
 
 
     def select_data(self):
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("../data/coffee.sqlite")
         res = self.connection.cursor().execute('SELECT * from coffee').fetchall()
         # Заполним размеры таблицы
         self.tableWidget.setColumnCount(7)
@@ -33,12 +36,12 @@ class DBSample(QMainWindow):
 class EditCoffee(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        uic.loadUi('../UI/addEditCoffeeForm.ui', self)
 
         self.create_btn.clicked.connect(self.create_coffee)
         self.edit_btn.clicked.connect(self.edit_coffee)
 
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("../data/coffee.sqlite")
         self.cur = self.connection.cursor()
 
         result = self.cur.execute('SELECT sale FROM coffee').fetchall()
@@ -66,7 +69,7 @@ class EditCoffee(QMainWindow):
 
 
     def create_coffee(self):
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("../data/coffee.sqlite")
         self.cur = self.connection.cursor()
         self.cur.execute('INSERT INTO coffee (sort, objarka, zerna, description, sale, volume) '
                          'VALUES (?, ?, ?, ?, ?, ?)',
@@ -77,7 +80,7 @@ class EditCoffee(QMainWindow):
 
 
     def edit_coffee(self):
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("../data/coffee.sqlite")
         self.cur = self.connection.cursor()
         self.cur.execute('UPDATE coffee SET sort = ?, objarka = ?, zerna = ?, description = ?, sale = ?, volume = ? '
                          'WHERE id = ?',
